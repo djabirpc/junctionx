@@ -1,0 +1,77 @@
+{% extends 'main.html' %} {% block content %}
+
+<!-- <div class="card card-warning">
+  <div class="card-header">
+    <h3 class="card-title">General Elements</h3>
+  </div>
+
+  <form>
+  <div class="card-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Text</label>
+            <input type="text" class="form-control" placeholder="Enter ..." />
+          </div>
+        </div>
+        
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label>Textarea</label>
+            <textarea
+              class="form-control"
+              rows="10"
+              placeholder="Enter ..."
+              
+            >{{ extracted_text }}</textarea>
+          </div>
+        </div>
+       
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="category">Select a category:</label>
+            <select class="form-control" name="category" id="category">
+              <option value="id">ID</option>
+              <option value="passport">Passport</option>
+              <option value="invoice">Invoice</option>
+            </select>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+    <div class="card-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div> -->
+
+<div class="card">
+  <div class="card-body">
+    <h3>Extracted Text:</h3>
+    <pre>{{ extracted_text }}</pre>
+    <form method="post" action="{% url 'save_text' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="category">Select a category:</label>
+        <select class="form-control" name="category" id="category">
+          <option value="id">ID</option>
+          <option value="passport">Passport</option>
+          <option value="invoice">Invoice</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Text</label>
+        <input type="text" name="name" class="form-control" placeholder="Enter ..." />
+      </div>
+      <input type="hidden" name="extracted_text" value="{{ extracted_text }}">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}
