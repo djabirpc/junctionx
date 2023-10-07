@@ -1,0 +1,21 @@
+{% extends 'main.html' %} 
+{% block content %}
+  <h1>Search Results</h1>
+  
+  <form method="get" action="{% url 'search_contracts' %}">
+    <input type="text" name="q" placeholder="Search contracts...">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if contracts %}
+    <ul>
+      {% for contract in contracts %}
+        <li>{{ contract.name }} - {{ contract.status }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No contracts found.</p>
+  {% endif %}
+  
+  <a href="{% url 'extract_text' %}">Back to Home</a>
+{% endblock %}

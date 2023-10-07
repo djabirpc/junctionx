@@ -2,8 +2,25 @@ from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from .models import ExtractedText
 
+import spacy
+
 from PIL import Image
 import pytesseract
+
+def parse_nlp_query(query):
+    nlp = spacy.load("en_core_web_sm")
+    doc = nlp(query)
+    intent = None
+    entities = []
+
+    for token in doc:
+        if "search" in token.text.lower() or "find" in token.text.lower():
+            intent = "search"
+        if token.ent_type_ == "PERSON":
+            entities.append({"type": "name", "value": token.text})
+        # You can add more entity recognition logic here based on your requirements.
+
+    return intent, entities
 
 
 # def index(request):
@@ -64,3 +81,21 @@ def save_extracted_text(request):
 
 def text_saved(request):
     return render(request, 'polls/text_saved.html')
+
+def search_contracts(request):
+    query = request.GET.get('q', '')
+    contracts = ExtractedText.objects.all()
+
+    # Parse the user's query using NLP (replace with your NLP library of choice)
+    entities = parse_nlp_query(query)
+
+    print(entities)
+
+    # Construct advanced queries based on recognized entities and intent
+    for entity in entities:
+        if entity.type == 'name':
+            contracts = contracts.filter(text__icontains=entity.value)
+        # elif entity.type == 'action' and entity.value == 'signed':
+        #     contracts = contracts.filter(status='signed')
+
+    return render(request, 'polls/search_results.html', {'contracts': contracts})
